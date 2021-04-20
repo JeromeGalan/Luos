@@ -45,6 +45,9 @@ typedef enum
     LUOS_REVISION,   // container sends its luos revision
     LUOS_STATISTICS, // container sends its luos revision
 
+    // bootloader command
+    BOOTLOADER,
+
     // ************* End of Luos managed commands ****************
 
     // Common register for all containers
