@@ -36,15 +36,15 @@ static bootloader_cmd_t bootloader_cmd;
  ******************************************************************************/
 uint8_t LuosBootloader_GetMode(void)
 {
-  uint32_t* p_start = (uint32_t*)SHARED_MEMORY_ADDRESS;
-  uint8_t boot_mode = 0x00;
-  
-  if(*p_start==0x00000000)
-    boot_mode = BOOTLOADER_MODE;
-  else
-    boot_mode = APPLICATION_MODE;
+    uint32_t* p_start = (uint32_t*)SHARED_MEMORY_ADDRESS;
+    uint8_t boot_mode = 0x00;
+    
+    if(*p_start==0x00000000)
+        boot_mode = BOOTLOADER_MODE;
+    else
+        boot_mode = APPLICATION_MODE;
 
-  return boot_mode;
+    return boot_mode;
 }
 
 /******************************************************************************
@@ -54,8 +54,7 @@ uint8_t LuosBootloader_GetMode(void)
  ******************************************************************************/
 void LuosBootloader_DeInit(void)
 {
-  HAL_RCC_DeInit();
-  HAL_DeInit();
+    LuosHAL_DeInit();
 }
 
 /******************************************************************************
@@ -65,19 +64,7 @@ void LuosBootloader_DeInit(void)
  ******************************************************************************/
 void LuosBootloader_JumpToApp(void)
 {
-  uint32_t  JumpAddress = *(__IO uint32_t*)(APP_ADDRESS + 4);
-  pFunction Jump        = (pFunction)JumpAddress;
-
-  __disable_irq();
-
-  SysTick->CTRL = 0;
-  SysTick->LOAD = 0;
-  SysTick->VAL  = 0;
-
-  SCB->VTOR = APP_ADDRESS;
-
-  __set_MSP(*(__IO uint32_t*)APP_ADDRESS);
-  Jump();
+    LuosHAL_JumpToApp(APP_ADDRESS);
 }
 
 /******************************************************************************

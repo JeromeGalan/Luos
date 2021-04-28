@@ -17,8 +17,6 @@
 #define BOOTLOADER_MODE         0x00
 #define APPLICATION_MODE        0x01
 
-typedef void (*pFunction)(void); /*!< Function pointer definition */
-
 // find shared memory section defined in linker file
 extern int __my_shared_mem_start;
 extern int __my_shared_mem_end;
