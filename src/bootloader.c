@@ -87,6 +87,9 @@ void LuosBootloader_Task(void)
     switch(bootloader_state)
     {
         case BOOTLOADER_IDLE_STATE:
+            // for debug purpose
+            change_blink(3);
+
             // if STOP_CMD, restart the node
             if(bootloader_cmd == BOOTLOADER_STOP)
             {
@@ -95,7 +98,9 @@ void LuosBootloader_Task(void)
             // if READY_CMD, continue BOOTLOADER process
             if(bootloader_cmd == BOOTLOADER_READY)
             {
-                LuosBootloader_SetState(BOOTLOADER_READY_STATE);
+                // send READY resp and go to HEADER state
+
+                LuosBootloader_SetState(BOOTLOADER_BIN_HEADER_STATE);
             }
             break;
 
@@ -106,16 +111,10 @@ void LuosBootloader_Task(void)
             LuosHAL_Reboot();
             break;
 
-        case BOOTLOADER_READY_STATE:
+        case BOOTLOADER_BIN_HEADER_STATE:
             // for debug purpose
             change_blink(5);
-            // send ready response
 
-            // go to HEADER state
-            LuosBootloader_SetState(BOOTLOADER_BIN_HEADER_STATE);
-            break;
-
-        case BOOTLOADER_BIN_HEADER_STATE:
             if(bootloader_cmd == BOOTLOADER_BIN_HEADER)
             {
                 // handle header data
