@@ -79,7 +79,7 @@ void LuosBootloader_SetState(bootloader_state_t state)
 
 /******************************************************************************
  * @brief Bootloader machine state
- * @param data received from luos network
+ * @param None
  * @return None
  ******************************************************************************/
 void LuosBootloader_Task(void)
@@ -107,6 +107,8 @@ void LuosBootloader_Task(void)
             break;
 
         case BOOTLOADER_READY_STATE:
+            // for debug purpose
+            change_blink(5);
             // send ready response
 
             // go to HEADER state
@@ -152,7 +154,7 @@ void LuosBootloader_Task(void)
 }
 
 /******************************************************************************
- * @brief Main function called from luos library
+ * @brief Message handler called from luos library
  * @param data received from luos network
  * @return None
  ******************************************************************************/

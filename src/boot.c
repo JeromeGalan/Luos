@@ -26,11 +26,22 @@ uint16_t boot_blinktime = 100;
 unsigned long boot_my_time; //Used to keep track of time
 uint8_t boot_led_last_state = 0; //Is the LED on or off?
 uint8_t boot_count = 0;
+uint8_t nb_blink = 3;
 
 /*******************************************************************************
  * Function
  ******************************************************************************/
 static void Boot_MsgHandler(container_t *container, msg_t *msg);
+
+/******************************************************************************
+ * @brief change blinktime
+ * @param None
+ * @return None
+ ******************************************************************************/
+void change_blink(uint8_t new_nb_blink)
+{
+  nb_blink = new_nb_blink;
+}
 
 /******************************************************************************
  * @brief init must be call in project init
@@ -55,7 +66,7 @@ void Boot_Loop(void)
     //Reset the counter
     boot_my_time = HAL_GetTick() + boot_blinktime;
 
-    if (boot_count < 3)
+    if (boot_count < nb_blink)
     {
       boot_count++;
       boot_blinktime = 100;
