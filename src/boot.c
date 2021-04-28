@@ -22,10 +22,10 @@ typedef enum
     BOOT_APP = LUOS_LAST_TYPE
 } App_type_t;
 
-uint16_t blinktime = 100;
-unsigned long my_time; //Used to keep track of time
-uint8_t led_last_state = 0; //Is the LED on or off?
-uint8_t count = 0;
+uint16_t boot_blinktime = 100;
+unsigned long boot_my_time; //Used to keep track of time
+uint8_t boot_led_last_state = 0; //Is the LED on or off?
+uint8_t boot_count = 0;
 
 /*******************************************************************************
  * Function
@@ -50,26 +50,26 @@ void Boot_Init(void)
 void Boot_Loop(void)
 {
   //Check to see if we have overshot our counter
-	if (my_time < HAL_GetTick())
+	if (boot_my_time < HAL_GetTick())
 	{
     //Reset the counter
-    my_time = HAL_GetTick() + blinktime;
+    boot_my_time = HAL_GetTick() + boot_blinktime;
 
-    if (count < 3)
+    if (boot_count < 3)
     {
-      count++;
-      blinktime = 100;
+      boot_count++;
+      boot_blinktime = 100;
     }
     else
     {
-      count = 0;
-      blinktime = 1000;
+      boot_count = 0;
+      boot_blinktime = 1000;
     }
 
     //Invert the LED state
-    led_last_state = (led_last_state == 1 ? 0: 1);
+    boot_led_last_state = (boot_led_last_state == 1 ? 0: 1);
 
-    if (led_last_state)
+    if (boot_led_last_state)
       HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
     else
       HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
