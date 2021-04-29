@@ -68,6 +68,22 @@ void LuosBootloader_JumpToApp(void)
 }
 
 /******************************************************************************
+ * @brief Send response to the gate
+ * @param None
+ * @return None
+ ******************************************************************************/
+void LuosBootloader_SendResponse(bootloader_cmd_t response)
+{
+    msg_t ready_msg;
+    ready_msg.header.cmd = BOOTLOADER;
+    ready_msg.header.target_mode = NODEIDACK;
+    ready_msg.header.target = 1;    // always send to the gate wich launched the detection
+    ready_msg.header.size = sizeof(uint8_t);
+    ready_msg.data[0] = response;
+    Luos_SendMsg(boot_container, &ready_msg);
+}
+
+/******************************************************************************
  * @brief set state of the bootloader
  * @param state 
  * @return None
@@ -99,13 +115,7 @@ void LuosBootloader_Task(void)
             if(bootloader_cmd == BOOTLOADER_READY)
             {
                 // send READY response
-                msg_t ready_msg;
-                ready_msg.header.cmd = BOOTLOADER;
-                ready_msg.header.target_mode = NODEID;
-                ready_msg.header.target = 1;    // always send to the gate wich launched the detection
-                ready_msg.header.size = sizeof(uint8_t);
-                ready_msg.data[0] = BOOTLOADER_BIN_HEADER_STATE;
-                Luos_SendMsg(boot_container, &ready_msg);
+                LuosBootloader_SendResponse(BOOTLOADER_READY_RESP);
                 // go to HEADER state
                 LuosBootloader_SetState(BOOTLOADER_BIN_HEADER_STATE);
             }
