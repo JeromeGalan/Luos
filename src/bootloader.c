@@ -98,8 +98,15 @@ void LuosBootloader_Task(void)
             // if READY_CMD, continue BOOTLOADER process
             if(bootloader_cmd == BOOTLOADER_READY)
             {
-                // send READY resp and go to HEADER state
-
+                // send READY response
+                msg_t ready_msg;
+                ready_msg.header.cmd = BOOTLOADER;
+                ready_msg.header.target_mode = NODEID;
+                ready_msg.header.target = 1;    // always send to the gate wich launched the detection
+                ready_msg.header.size = sizeof(uint8_t);
+                ready_msg.data[0] = BOOTLOADER_BIN_HEADER_STATE;
+                Luos_SendMsg(boot_container, &ready_msg);
+                // go to HEADER state
                 LuosBootloader_SetState(BOOTLOADER_BIN_HEADER_STATE);
             }
             break;

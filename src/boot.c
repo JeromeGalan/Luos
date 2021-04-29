@@ -51,7 +51,7 @@ void change_blink(uint8_t new_nb_blink)
 void Boot_Init(void)
 {
 	revision_t revision = {.unmap = REV};
-  Luos_CreateContainer(Boot_MsgHandler, BOOT_APP, "boot_app", revision);
+  boot_container = Luos_CreateContainer(Boot_MsgHandler, BOOT_APP, "boot_app", revision);
 }
 /******************************************************************************
  * @brief loop must be call in project loop
