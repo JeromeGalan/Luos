@@ -168,16 +168,27 @@ void LuosBootloader_MsgHandler(uint8_t* data)
 {
     bootloader_cmd = data[0];
 
-    if(bootloader_cmd == BOOTLOADER_START)
+    switch(bootloader_cmd)
     {
-        // We're in the app, set bootloader mode and reboot
-        LuosHAL_SetBootloaderMode();
-        LuosHAL_Reboot();
-    }
-    else
-    {
-        // we're in the bootloader, process cmd and data
-        bootloader_data = &data[1];
+        case BOOTLOADER_START:
+            // We're in the app, set bootloader mode and reboot
+            LuosHAL_SetBootloaderMode();
+            LuosHAL_Reboot();
+            break;
+
+        case BOOTLOADER_STOP:
+        case BOOTLOADER_READY:
+        case BOOTLOADER_BIN_HEADER:
+        case BOOTLOADER_BIN_CHUNK:
+        case BOOTLOADER_BIN_END:
+        case BOOTLOADER_CRC_TEST:
+            // we're in the bootloader, process cmd and data
+            bootloader_data = &data[1];
+            break;
+
+        case BOOTLOADER_READY_RESP:
+            // we're in the gate
+            break;
     }
 }
 
