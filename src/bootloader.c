@@ -7,9 +7,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 #include "bootloader.h"
 #include "luos_hal.h"
 #include "luos.h"
+
+#ifdef BOOTLOADER_EX
+    #include "bootloader_ex.h"
+#endif
 
 // TODO : juste pour le debug
 #include "boot.h"
@@ -196,8 +201,14 @@ void LuosBootloader_MsgHandler(uint8_t* data)
             bootloader_data = &data[1];
             break;
 
+#ifdef BOOTLOADER_EX
         case BOOTLOADER_READY_RESP:
             // we're in the gate
+            LuosBootloader_GateRcv();
+            break;
+#endif
+
+        default:
             break;
     }
 }
