@@ -26,7 +26,7 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-static bootloader_state_t bootloader_state = BOOTLOADER_IDLE_STATE;
+static bootloader_state_t bootloader_state = BOOTLOADER_START_STATE;
 static uint8_t* bootloader_data;
 static bootloader_cmd_t bootloader_cmd;
 
@@ -107,6 +107,13 @@ void LuosBootloader_Task(void)
 {
     switch(bootloader_state)
     {
+        case BOOTLOADER_START_STATE:
+            // set ID node saved in flash
+
+            // go to idle state
+            LuosBootloader_SetState(BOOTLOADER_IDLE_STATE);
+            break;
+
         case BOOTLOADER_IDLE_STATE:
             // for debug purpose
             change_blink(3);
@@ -198,7 +205,8 @@ void LuosBootloader_MsgHandler(uint8_t* data)
     switch(bootloader_cmd)
     {
         case BOOTLOADER_START:
-            // We're in the app, set bootloader mode and reboot
+            // We're in the app,
+            // set bootloader mode, save node ID and reboot
             LuosHAL_SetBootloaderMode();
             LuosHAL_Reboot();
             break;
@@ -209,7 +217,8 @@ void LuosBootloader_MsgHandler(uint8_t* data)
         case BOOTLOADER_BIN_CHUNK:
         case BOOTLOADER_BIN_END:
         case BOOTLOADER_CRC_TEST:
-            // we're in the bootloader, process cmd and data
+            // we're in the bootloader, 
+            // process cmd and data
             bootloader_data = &data[1];
             break;
 
