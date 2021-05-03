@@ -18,7 +18,6 @@
 
 // TODO : juste pour le debug
 #include "boot.h"
-#include "main.h"
 
 /*******************************************************************************
  * Definitions
@@ -80,6 +79,18 @@ void LuosBootloader_DeInit(void)
 void LuosBootloader_JumpToApp(void)
 {
     LuosHAL_JumpToApp(APP_ADDRESS);
+}
+
+/******************************************************************************
+ * @brief Save node id in flash
+ * @param None
+ * @return None
+ ******************************************************************************/
+void LuosBootloader_SaveNodeID(void)
+{
+    uint16_t node_id = Robus_GetNodeID();
+
+    LuosHAL_SaveNodeID(SHARED_MEMORY_ADDRESS, node_id);
 }
 
 /******************************************************************************
@@ -218,6 +229,7 @@ void LuosBootloader_MsgHandler(uint8_t* data)
             // We're in the app,
             // set bootloader mode, save node ID and reboot
             LuosHAL_SetBootloaderMode();
+            LuosBootloader_SaveNodeID();
             LuosHAL_Reboot();
             break;
 
