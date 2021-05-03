@@ -18,6 +18,7 @@
 
 // TODO : juste pour le debug
 #include "boot.h"
+#include "main.h"
 
 /*******************************************************************************
  * Definitions
@@ -43,8 +44,10 @@ uint8_t LuosBootloader_GetMode(void)
 {
     uint32_t* p_start = (uint32_t*)SHARED_MEMORY_ADDRESS;
     uint8_t boot_mode = 0x00;
+
+    uint32_t data = *p_start & 0x000000FF;
     
-    if(*p_start==0x00000000)
+    if(data == 0x00000000)
         boot_mode = BOOTLOADER_MODE;
     else
         boot_mode = APPLICATION_MODE;
