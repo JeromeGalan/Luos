@@ -45,12 +45,19 @@ uint8_t LuosBootloader_GetMode(void)
     uint32_t* p_start = (uint32_t*)SHARED_MEMORY_ADDRESS;
     uint8_t boot_mode = 0x00;
 
-    uint32_t data = *p_start & 0x000000FF;
+    uint32_t data = *p_start & BOOT_MODE_MASK;
     
-    if(data == 0x00000000)
-        boot_mode = BOOTLOADER_MODE;
-    else
-        boot_mode = APPLICATION_MODE;
+    switch(data)
+    {
+        case 0:
+            boot_mode = BOOTLOADER_MODE;
+            break;
+        case 1:
+            boot_mode = APPLICATION_MODE;
+            break;
+        default:
+            break;
+    }        
 
     return boot_mode;
 }
