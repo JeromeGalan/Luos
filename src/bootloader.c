@@ -85,7 +85,7 @@ void LuosBootloader_SendResponse(bootloader_cmd_t response)
     ready_msg.header.target = 1;    // always send to the gate wich launched the detection
     ready_msg.header.size = sizeof(uint8_t);
     ready_msg.data[0] = response;
-    Luos_SendMsg(boot_container, &ready_msg);
+    Luos_SendMsg(0, &ready_msg);
 }
 
 /******************************************************************************
