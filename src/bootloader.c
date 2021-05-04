@@ -163,9 +163,6 @@ void LuosBootloader_Task(void)
             break;
 
         case BOOTLOADER_BIN_HEADER_STATE:
-            // for debug purpose
-            change_blink(5);
-
             // if STOP_CMD, restart the node
             if(bootloader_cmd == BOOTLOADER_STOP)
             {
@@ -175,13 +172,16 @@ void LuosBootloader_Task(void)
             if(bootloader_cmd == BOOTLOADER_BIN_HEADER)
             {
                 // handle header data
-
+                LuosBootloader_SendResponse(BOOTLOADER_BIN_HEADER_RESP);
                 // go to BIN_CHUNK state
                 LuosBootloader_SetState(BOOTLOADER_BIN_CHUNK_STATE);
             }
             break;
 
         case BOOTLOADER_BIN_CHUNK_STATE:
+            // for debug purpose
+            change_blink(5);
+
             // if STOP_CMD, restart the node
             if(bootloader_cmd == BOOTLOADER_STOP)
             {
