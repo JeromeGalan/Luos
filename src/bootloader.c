@@ -94,6 +94,18 @@ void LuosBootloader_SaveNodeID(void)
 }
 
 /******************************************************************************
+ * @brief Set node id with data saved in flash
+ * @param None
+ * @return None
+ ******************************************************************************/
+void LuosBootloader_SetNodeID(void)
+{
+    uint16_t node_id = LuosHAL_GetNodeID(SHARED_MEMORY_ADDRESS);
+
+    Robus_SetNodeID(node_id);
+}
+
+/******************************************************************************
  * @brief Send response to the gate
  * @param None
  * @return None
@@ -130,7 +142,7 @@ void LuosBootloader_Task(void)
     {
         case BOOTLOADER_START_STATE:
             // set ID node saved in flash
-
+            LuosBootloader_SetNodeID();
             // go to idle state
             LuosBootloader_SetState(BOOTLOADER_IDLE_STATE);
             break;

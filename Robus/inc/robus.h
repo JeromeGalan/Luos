@@ -31,5 +31,6 @@ void Robus_Flush(void);
 
 // bootloader functions
 uint16_t Robus_GetNodeID(void);
+void Robus_SetNodeID(uint16_t);
 
 #endif /* _ROBUS_H_ */
