@@ -139,11 +139,11 @@ void LuosBootloader_Task(void)
         case BOOTLOADER_START_STATE:
             // set ID node saved in flash
             LuosBootloader_SetNodeID();
-            // go to idle state
-            LuosBootloader_SetState(BOOTLOADER_IDLE_STATE);
+            // go to ready state
+            LuosBootloader_SetState(BOOTLOADER_READY_STATE);
             break;
 
-        case BOOTLOADER_IDLE_STATE:
+        case BOOTLOADER_READY_STATE:
             // for debug purpose
             change_blink(3);
 
@@ -207,7 +207,7 @@ void LuosBootloader_Task(void)
 
         case BOOTLOADER_CRC_TEST_STATE:
             // go to IDLE state
-            LuosBootloader_SetState(BOOTLOADER_IDLE_STATE);
+            LuosBootloader_SetState(BOOTLOADER_READY_STATE);
             break;
 
         case BOOTLOADER_STOP_STATE:
