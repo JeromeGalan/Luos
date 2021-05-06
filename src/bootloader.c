@@ -33,7 +33,7 @@ uint32_t page_addr = APP_ADDRESS;
 uint8_t page_buff[(uint16_t)PAGE_SIZE];
 uint16_t data_index = 0;
 uint16_t residual_space = (uint16_t)PAGE_SIZE;
-uint16_t page_id = 1;
+uint16_t page_id = 26;
 
 /*******************************************************************************
  * Function
@@ -203,7 +203,7 @@ void LuosBootloader_Task(void)
                     memcpy(&page_buff[data_index], bootloader_data, residual_space);
 
                     // save the completed page in flash memory
-                    //LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
+                    LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
 
                     // Prepare next page buffer
                     page_addr += PAGE_SIZE;
@@ -223,7 +223,7 @@ void LuosBootloader_Task(void)
             if(bootloader_cmd == BOOTLOADER_BIN_END)
             {
                 // save the current page in flash memory
-                //LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
+                LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
 
                 // go to BIN_END state
                 LuosBootloader_SetState(BOOTLOADER_BIN_END_STATE);
