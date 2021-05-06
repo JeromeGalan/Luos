@@ -29,6 +29,7 @@ extern int __my_shared_mem_end;
 #define BOOTLOADER_SND_COMMAND      0x10
 typedef enum
 {
+    BOOTLOADER_IDLE,
     BOOTLOADER_START = BOOTLOADER_RCV_COMMAND,
     BOOTLOADER_STOP,
     BOOTLOADER_READY,
