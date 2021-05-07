@@ -351,6 +351,7 @@ static error_return_t Luos_MsgHandler(container_t *container, msg_t *input)
         case BOOTLOADER:
             // send data to the bootloader
             LuosBootloader_MsgHandler(input->data);
+            consume = SUCCEED;
             break;
         default:
             break;
