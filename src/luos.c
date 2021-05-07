@@ -10,6 +10,7 @@
 #include "msg_alloc.h"
 #include "robus.h"
 #include "luos_hal.h"
+#include "bootloader.h"
 
 /*******************************************************************************
  * Definitions
@@ -348,14 +349,8 @@ static error_return_t Luos_MsgHandler(container_t *container, msg_t *input)
             consume                             = SUCCEED;
             break;
         case BOOTLOADER:
-            // reset if a bootloader start command has been received
-            if (input->data[0] == 0x01)
-            {
-                // save boot_mode in flash
-                LuosHAL_SetBootloaderMode();
-                // reboot the node
-                LuosHAL_Reboot();
-            }
+            // send data to the bootloader
+            LuosBootloader_MsgHandler(input->data);
             break;
         default:
             break;
