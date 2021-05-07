@@ -167,6 +167,9 @@ static error_return_t Luos_IsALuosCmd(container_t *container, uint8_t cmd, uint1
                 return SUCCEED;
             }
             break;
+        case BOOTLOADER:
+            return SUCCEED;
+            break;
         default:
             return FAILED;
             break;
@@ -343,6 +346,22 @@ static error_return_t Luos_MsgHandler(container_t *container, msg_t *input)
             container->auto_refresh.time_ms     = (uint16_t)TimeOD_TimeTo_ms(time);
             container->auto_refresh.last_update = LuosHAL_GetSystick();
             consume                             = SUCCEED;
+            break;
+        case BOOTLOADER:
+            // reset if a bootloader start command has been received
+            if (input->data[0] == 0x01)
+            {
+                // DeInit RCC and HAL
+                HAL_RCC_DeInit();
+                HAL_DeInit();
+
+                // reset systick
+                SysTick->CTRL = 0;
+                SysTick->LOAD = 0;
+                SysTick->VAL  = 0;
+
+                NVIC_SystemReset();
+            }
             break;
         default:
             break;
