@@ -355,11 +355,33 @@ static error_return_t Luos_MsgHandler(container_t *container, msg_t *input)
                 HAL_RCC_DeInit();
                 HAL_DeInit();
 
+                uint32_t page_error = 0;
+                FLASH_EraseInitTypeDef s_eraseinit;
+                uint64_t data = 0x00000000; // select bootloader mode
+
+                s_eraseinit.TypeErase = FLASH_TYPEERASE_PAGES;
+                s_eraseinit.Page      = 25 - 1;
+                s_eraseinit.NbPages   = 1;
+
+                // Unlock flash
+                HAL_FLASH_Unlock();
+                // Erase Page
+                HAL_FLASHEx_Erase(&s_eraseinit, &page_error);
+                // ST hal flash program function write data by uint64_t raw data
+                HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, (uint32_t)0x0800C000, (uint64_t)data);
+                // re-lock FLASH
+                HAL_FLASH_Lock();
+
+                // DeInit RCC and HAL
+                HAL_RCC_DeInit();
+                HAL_DeInit();
+
                 // reset systick
                 SysTick->CTRL = 0;
                 SysTick->LOAD = 0;
                 SysTick->VAL  = 0;
 
+                // reset in bootloader mode
                 NVIC_SystemReset();
             }
             break;
