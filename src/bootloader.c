@@ -118,7 +118,7 @@ void LuosBootloader_ProcessData(void)
         // save the completed page in flash memory
         LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
 
-        // Prepare next page buffer
+        // prepare next page buffer
         page_addr += PAGE_SIZE;
         page_id += 1;
         data_index = 0;
