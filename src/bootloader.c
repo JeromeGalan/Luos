@@ -12,10 +12,6 @@
 #include "luos_hal.h"
 #include "luos.h"
 
-#ifdef BOOTLOADER_EX
-    #include "bootloader_ex.h"
-#endif
-
 // TODO : juste pour le debug
 #include "boot.h"
 
@@ -113,7 +109,7 @@ void LuosBootloader_SetNodeID(void)
 void LuosBootloader_SendResponse(bootloader_cmd_t response)
 {
     msg_t ready_msg;
-    ready_msg.header.cmd = BOOTLOADER;
+    ready_msg.header.cmd = BOOTLOADER_RESP;
     ready_msg.header.target_mode = NODEIDACK;
     ready_msg.header.target = 1;    // always send to the gate wich launched the detection
     ready_msg.header.size = sizeof(uint8_t);
@@ -255,13 +251,6 @@ void LuosBootloader_MsgHandler(uint8_t* data)
             // process cmd and data
             bootloader_data = &data[1];
             break;
-
-#ifdef BOOTLOADER_EX
-        case BOOTLOADER_READY_RESP:
-            // we're in the gate
-            LuosBootloader_GateRcv();
-            break;
-#endif
 
         default:
             break;
