@@ -15,15 +15,15 @@
 #define SHARED_MEMORY_ADDRESS   0x0800C000
 #define SHARED_FLASH_PAGE       25
 #define APP_ADDRESS             (uint32_t)0x0800C800
+#define APP_FLASH_PAGE          26
 
 #define BOOT_MODE_MASK          0x000000FF
+#define NODE_ID_MASK            0x00FFFF00
+
+#define NODE_ID_OFFSET          8
 
 #define BOOTLOADER_MODE         0x00
 #define APPLICATION_MODE        0x01
-
-// find shared memory section defined in linker file
-extern int __my_shared_mem_start;
-extern int __my_shared_mem_end;
 
 #define BOOTLOADER_RCV_COMMAND      0x01
 #define BOOTLOADER_SND_COMMAND      0x10

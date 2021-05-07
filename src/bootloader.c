@@ -33,7 +33,7 @@ uint32_t page_addr = APP_ADDRESS;
 uint8_t page_buff[(uint16_t)PAGE_SIZE];
 uint16_t data_index = 0;
 uint16_t residual_space = (uint16_t)PAGE_SIZE;
-uint16_t page_id = 26;
+uint16_t page_id = APP_FLASH_PAGE;
 
 /*******************************************************************************
  * Function
