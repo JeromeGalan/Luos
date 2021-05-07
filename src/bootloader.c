@@ -12,19 +12,27 @@
 #include "luos_hal.h"
 #include "luos.h"
 
-// TODO : juste pour le debug
 #include "boot.h"
 
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#define MAX_FRAME_SIZE      127
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
 static bootloader_state_t bootloader_state = BOOTLOADER_START_STATE;
-static uint8_t* bootloader_data;
 static bootloader_cmd_t bootloader_cmd;
+
+// variables use to save binary data in flash
+uint8_t bootloader_data[MAX_FRAME_SIZE];
+uint16_t bootloader_data_size = 0;
+
+uint32_t flash_addr = APP_ADDRESS;
+uint8_t page_buff[PAGE_SIZE];
+uint16_t data_index = 0;
+uint16_t residual_space = PAGE_SIZE;
 
 /*******************************************************************************
  * Function
@@ -144,9 +152,6 @@ void LuosBootloader_Task(void)
             break;
 
         case BOOTLOADER_READY_STATE:
-            // for debug purpose
-            change_blink(3);
-
             // if STOP_CMD, restart the node
             if(bootloader_cmd == BOOTLOADER_STOP)
             {
@@ -214,9 +219,9 @@ void LuosBootloader_Task(void)
  * @param data received from luos network
  * @return None
  ******************************************************************************/
-void LuosBootloader_MsgHandler(uint8_t* data)
+void LuosBootloader_MsgHandler(msg_t *input)
 {
-    bootloader_cmd = data[0];
+    bootloader_cmd = input->data[0];
 
     switch(bootloader_cmd)
     {
@@ -236,7 +241,8 @@ void LuosBootloader_MsgHandler(uint8_t* data)
         case BOOTLOADER_CRC_TEST:
             // we're in the bootloader, 
             // process cmd and data
-            bootloader_data = &data[1];
+            bootloader_data_size = input->header.size - sizeof(char);
+            memcpy(bootloader_data, &(input->data[1]), bootloader_data_size);
             break;
 
         default:
