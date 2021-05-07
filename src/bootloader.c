@@ -183,7 +183,7 @@ void LuosBootloader_Task(void)
 
             if(bootloader_cmd == BOOTLOADER_BIN_CHUNK)
             {
-                // reset bootloader cmd to avoid turning in this state
+                // reset bootloader cmd to avoid looping in this portion of the code
                 bootloader_cmd = BOOTLOADER_IDLE;
 
                 // handle binary data
