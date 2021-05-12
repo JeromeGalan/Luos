@@ -98,6 +98,7 @@ void LuosBootloader_SetNodeID(void)
  * @param None 
  * @return None
  ******************************************************************************/
+inline void LuosBootloader_ProcessData(void);
 void LuosBootloader_ProcessData(void)
 {
     if (residual_space >= bootloader_data_size)
@@ -131,6 +132,17 @@ void LuosBootloader_ProcessData(void)
         data_index     = bootloader_data_size - residual_space;
         residual_space = (uint16_t)PAGE_SIZE - data_index;
     }
+}
+
+/******************************************************************************
+ * @brief Save the current page when BIN_END command is received 
+ * @param None 
+ * @return None
+ ******************************************************************************/
+inline void LuosBootloader_SaveLastData(void);
+void LuosBootloader_SaveLastData(void)
+{
+    LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
 }
 
 /******************************************************************************
@@ -217,7 +229,7 @@ void LuosBootloader_Task(void)
             if (bootloader_cmd == BOOTLOADER_BIN_END)
             {
                 // save the current page in flash memory
-                LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
+                LuosBootloader_SaveLastData();
 
                 // send ack to the Host
                 LuosBootloader_SendResponse(BOOTLOADER_BIN_END_RESP);
