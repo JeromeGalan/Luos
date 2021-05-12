@@ -219,14 +219,12 @@ void LuosBootloader_Task(void)
                 // save the current page in flash memory
                 LuosHAL_ProgramFlash(page_addr, page_id, (uint16_t)PAGE_SIZE, page_buff);
 
-                // go to BIN_END state
-                LuosBootloader_SetState(BOOTLOADER_BIN_END_STATE);
-            }
-            break;
+                // send ack to the Host
+                LuosBootloader_SendResponse(BOOTLOADER_BIN_END_RESP);
 
-        case BOOTLOADER_BIN_END_STATE:
-            // go to CRC_TEST state
-            LuosBootloader_SetState(BOOTLOADER_CRC_TEST_STATE);
+                // go to BIN_END state
+                LuosBootloader_SetState(BOOTLOADER_CRC_TEST_STATE);
+            }
             break;
 
         case BOOTLOADER_CRC_TEST_STATE:
