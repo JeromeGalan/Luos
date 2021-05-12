@@ -210,6 +210,8 @@ void LuosBootloader_Task(void)
                 bootloader_cmd = BOOTLOADER_IDLE;
                 // handle binary data
                 LuosBootloader_ProcessData();
+                // send ack to the Host
+                LuosBootloader_SendResponse(BOOTLOADER_BIN_CHUNK_RESP);
             }
 
             if (bootloader_cmd == BOOTLOADER_BIN_END)
