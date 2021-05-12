@@ -248,8 +248,15 @@ void LuosBootloader_Task(void)
             break;
 
         case BOOTLOADER_CRC_TEST_STATE:
-            // go to IDLE state
-            LuosBootloader_SetState(BOOTLOADER_READY_STATE);
+
+            if (bootloader_cmd == BOOTLOADER_CRC_TEST)
+            {
+                // send ack to the Host
+                LuosBootloader_SendResponse(BOOTLOADER_CRC_RESP);
+
+                // go to READY state
+                LuosBootloader_SetState(BOOTLOADER_READY_STATE);
+            }
             break;
 
         case BOOTLOADER_STOP_STATE:
