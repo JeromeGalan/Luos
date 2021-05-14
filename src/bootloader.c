@@ -193,17 +193,29 @@ uint8_t compute_crc(void)
     uint8_t data  = 0x00;
     uint16_t poly = 0x0007;
 
-    uint32_t data_flash    = 0x00000000;
+    uint32_t nb_bytes      = 21788;
+    uint32_t data_counter  = 0;
     uint8_t data_index     = 0;
     uint32_t *data_address = (uint32_t *)APP_ADDRESS;
+    uint32_t data_flash    = 0;
 
-    // read 4 bytes in flash memory
-    data_flash = *data_address;
-    for (data_index = 0; data_index < 4; data_index++)
+    while (data_counter < nb_bytes)
     {
-        data = (uint8_t)(data_flash >> (8 * data_index));
-        // compute crc
-        crc8(&data, &crc, poly);
+        // read 1 word in flash memory
+        data_flash = *data_address;
+        // read 4 bytes in flash memory
+        for (data_index = 0; data_index < 4; data_index++)
+        {
+            if (data_counter < nb_bytes)
+            {
+                data = (uint8_t)(data_flash >> (8 * data_index));
+                // compute crc
+                crc8(&data, &crc, poly);
+                data_counter += 1;
+            }
+        }
+        // update data address
+        data_address += 1;
     }
 
     return crc;
