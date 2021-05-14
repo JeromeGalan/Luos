@@ -155,19 +155,19 @@ void LuosBootloader_SaveLastData(void)
 }
 
 /******************************************************************************
- * @brief compute crc 16 for each data
+ * @brief compute crc 8 for each data
  * @param data pointer, data len 
  * @return crc
  ******************************************************************************/
-void crc8(uint8_t *data, uint8_t *crc, uint16_t polynome)
+void crc8(const uint8_t *data, uint8_t *crc, uint16_t polynome)
 {
     uint16_t dbyte = 0;
     uint16_t mix   = 0;
 
     // zero padding data
     dbyte = (uint16_t)*data << 8;
-    // add initial crc value
-    dbyte ^= (uint16_t)*crc;
+    // add initial value
+    dbyte ^= (uint16_t)*crc << 8;
     // right shift polynomial key
     polynome = polynome << 8;
     // shift and xor if necessary
@@ -190,11 +190,21 @@ void crc8(uint8_t *data, uint8_t *crc, uint16_t polynome)
 uint8_t compute_crc(void)
 {
     uint8_t crc   = 0x00; // initial crc value
-    uint8_t data  = 0x80;
+    uint8_t data  = 0x00;
     uint16_t poly = 0x0007;
 
-    // compute crc
-    crc8(&data, &crc, poly);
+    uint32_t data_flash    = 0x00000000;
+    uint8_t data_index     = 0;
+    uint32_t *data_address = (uint32_t *)APP_ADDRESS;
+
+    // read 4 bytes in flash memory
+    data_flash = *data_address;
+    for (data_index = 0; data_index < 4; data_index++)
+    {
+        data = (uint8_t)(data_flash >> (8 * data_index));
+        // compute crc
+        crc8(&data, &crc, poly);
+    }
 
     return crc;
 }
