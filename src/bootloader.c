@@ -295,17 +295,6 @@ void LuosBootloader_Task(void)
                 // send READY response
                 LuosBootloader_SendResponse(BOOTLOADER_READY_RESP);
                 // go to HEADER state
-                LuosBootloader_SetState(BOOTLOADER_BIN_HEADER_STATE);
-            }
-            break;
-
-        case BOOTLOADER_BIN_HEADER_STATE:
-
-            if (bootloader_cmd == BOOTLOADER_BIN_HEADER)
-            {
-                // handle header data
-                LuosBootloader_SendResponse(BOOTLOADER_BIN_HEADER_RESP);
-                // go to BIN_CHUNK state
                 LuosBootloader_SetState(BOOTLOADER_BIN_CHUNK_STATE);
             }
             break;
@@ -381,7 +370,6 @@ void LuosBootloader_MsgHandler(msg_t *input)
 
         case BOOTLOADER_STOP:
         case BOOTLOADER_READY:
-        case BOOTLOADER_BIN_HEADER:
         case BOOTLOADER_BIN_CHUNK:
         case BOOTLOADER_BIN_END:
         case BOOTLOADER_CRC_TEST:
