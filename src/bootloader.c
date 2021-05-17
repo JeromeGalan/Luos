@@ -34,6 +34,7 @@ uint8_t page_buff[(uint16_t)PAGE_SIZE];
 uint16_t data_index     = 0;
 uint16_t residual_space = (uint16_t)PAGE_SIZE;
 uint16_t page_id        = APP_FLASH_PAGE;
+uint32_t nb_bytes       = 0;
 
 /*******************************************************************************
  * Function
@@ -193,7 +194,6 @@ uint8_t compute_crc(void)
     uint8_t data  = 0x00;
     uint16_t poly = 0x0007;
 
-    uint32_t nb_bytes      = 21788;
     uint32_t data_counter  = 0;
     uint8_t data_index     = 0;
     uint32_t *data_address = (uint32_t *)APP_ADDRESS;
@@ -290,6 +290,8 @@ void LuosBootloader_Task(void)
             // if READY_CMD, continue BOOTLOADER process
             if (bootloader_cmd == BOOTLOADER_READY)
             {
+                // save binary length
+                memcpy(&nb_bytes, &bootloader_data, sizeof(uint32_t));
                 // send READY response
                 LuosBootloader_SendResponse(BOOTLOADER_READY_RESP);
                 // go to HEADER state
