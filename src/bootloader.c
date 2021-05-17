@@ -370,6 +370,8 @@ void LuosBootloader_Task(void)
         case BOOTLOADER_STOP_STATE:
             // save boot_mode in flash
             LuosHAL_SetMode(APPLICATION_MODE);
+            // wait for the command to be send to all nodes
+            LuosHAL_Delay(1000);
             // reboot the node
             LuosHAL_Reboot();
             break;
