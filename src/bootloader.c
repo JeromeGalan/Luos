@@ -398,7 +398,6 @@ void LuosBootloader_Run(void)
             while (1)
             {
                 Luos_Loop();
-                Boot_Loop(); // pour le debug
                 LuosBootloader_Task();
             }
             break;
