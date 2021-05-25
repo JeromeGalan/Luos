@@ -48,6 +48,7 @@ static uint8_t LuosBootloader_GetMode(void);
 static void LuosBootloader_DeInit(void);
 static void LuosBootloader_JumpToApp(void);
 static void LuosBootloader_SetNodeID(void);
+static inline uint8_t LuosBootloader_IsEnoughSpace(uint32_t);
 static inline void LuosBootloader_ProcessData(void);
 static inline void LuosBootloader_SaveLastData(void);
 static void LuosBootloader_SendResponse(bootloader_cmd_t);
@@ -117,6 +118,26 @@ void LuosBootloader_SetNodeID(void)
     uint16_t node_id = LuosHAL_GetNodeID();
 
     Robus_SetNodeID(node_id);
+}
+#endif
+
+#ifdef BOOTLOADER_CONFIG
+/******************************************************************************
+ * @brief Set node id with data saved in flash
+ * @param None
+ * @return None
+ ******************************************************************************/
+uint8_t LuosBootloader_IsEnoughSpace(uint32_t binary_size)
+{
+    uint32_t free_space = FLASH_END - APP_ADDRESS;
+    if (free_space > binary_size)
+    {
+        return 0x01;
+    }
+    else
+    {
+        return 0x00;
+    }
 }
 #endif
 
@@ -322,10 +343,19 @@ void LuosBootloader_Task(void)
             {
                 // save binary length
                 memcpy(&nb_bytes, &bootloader_data, sizeof(uint32_t));
-                // send READY response
-                LuosBootloader_SendResponse(BOOTLOADER_READY_RESP);
-                // go to HEADER state
-                LuosBootloader_SetState(BOOTLOADER_BIN_CHUNK_STATE);
+                // check free space in flash
+                if (LuosBootloader_IsEnoughSpace(nb_bytes))
+                {
+                    // send READY response
+                    LuosBootloader_SendResponse(BOOTLOADER_READY_RESP);
+                    // go to HEADER state
+                    LuosBootloader_SetState(BOOTLOADER_BIN_CHUNK_STATE);
+                }
+                else
+                {
+                    // send READY response
+                    LuosBootloader_SendResponse(BOOTLOADER_ERROR_SIZE);
+                }
             }
             break;
 
