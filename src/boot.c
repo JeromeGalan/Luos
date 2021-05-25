@@ -34,5 +34,5 @@ typedef enum
 void Boot_Init(void)
 {
     revision_t revision = {.unmap = REV};
-    boot_container      = Luos_CreateContainer(0, BOOT_APP, "boot_app", revision);
+    Luos_CreateContainer(0, BOOT_APP, "boot_app", revision);
 }
